@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸福中文 - Bảng Điều Khiển Quản Trị Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .admin-tab-content { display: none; }
+        .admin-tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col antialiased">
+
+    <!-- MÀN HÌNH ĐĂNG NHẬP ADMIN -->
+    <div id="loginScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200">
+            <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white font-black flex items-center justify-center text-xl mb-4 mx-auto">福</div>
+            <h2 class="text-2xl font-extrabold text-slate-900 text-center mb-1">Quản Trị Hệ Thống</h2>
+            <p class="text-xs text-slate-500 text-center mb-6">Nhập mật khẩu quản trị viên để tiếp tục quản lý 幸福中文.</p>
+            <input type="password" id="adminPass" placeholder="Mật khẩu (123456)" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 mb-4">
+            <button onclick="checkLogin()" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-xs hover:bg-slate-800 transition shadow-md">Đăng Nhập Quản Trị</button>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH CHÍNH DASHBOARD ADMIN -->
+    <div id="adminContent" class="hidden max-w-6xl mx-auto px-6 py-10 flex-grow w-full space-y-8">
+        
+        <!-- Header Admin -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center text-lg">福</div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-900">Bảng Điều Khiển Admin</h1>
+                    <p class="text-xs text-slate-500">Cập nhật nội dung, tùy chỉnh giao diện & quản lý học viên theo thời gian thực.</p>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-4 py-2.5 rounded-xl hover:bg-red-100 transition">Đăng Xuất</button>
+        </header>
+
+        <!-- Thanh Tabs Quản Lý -->
+        <div class="flex flex-wrap gap-2 bg-slate-200/70 p-1.5 rounded-2xl border border-slate-300/60">
+            <button onclick="switchAdminTab('theme')" id="adminNav-theme" class="admin-nav-btn px-5 py-2.5 rounded-xl text-xs font-bold text-slate-900 bg-white shadow-sm transition">🎨 Cấu Hình Giao Diện</button>
+            <button onclick="switchAdminTab('posts')" id="adminNav-posts" class="admin-nav-btn px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">📚 Quản Lý Bài Đọc</button>
+            <button onclick="switchAdminTab('courses')" id="adminNav-courses" class="admin-nav-btn px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">🎓 Khóa Học & Tài Liệu</button>
+            <button onclick="switchAdminTab('students')" id="adminNav-students" class="admin-nav-btn px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">👥 Tiến Độ Học Viên</button>
+        </div>
+
+        <!-- ================= TAB 1: CẤU HÌNH GIAO DIỆN ================= -->
+        <section id="adminTab-theme" class="admin-tab-content active bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+                <h2 class="text-base font-bold text-slate-900">🎨 Cài Đặt Giao Diện & Tone Màu Website</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Thay đổi màu sắc chủ đạo và bật/tắt các khu vực hiển thị ở trang của học viên.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Chọn Tone màu -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Màu chủ đạo (Primary Theme):</label>
+                    <select id="themeColor" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900">
+                        <option value="emerald">Xanh ngọc Emerald (Mặc định)</option>
+                        <option value="slate">Xám tối Minimalist (Đen/Trắng)</option>
+                        <option value="indigo">Xanh dương Indigo (Corporate)</option>
+                        <option value="amber">Vàng hổ phách Warm</option>
+                    </select>
+                </div>
+
+                <!-- Bật / Tắt thành phần -->
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-slate-700">Tùy chọn ẩn / hiện thành phần:</label>
+                    <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <input type="checkbox" id="showHero" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Hiển thị khung Hero Banner giới thiệu ở Trang chủ
+                    </label>
+                    <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <input type="checkbox" id="showPinyinToggle" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Cho phép học viên Bật/Tắt Pinyin
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="saveThemeSettings()" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-slate-800 transition shadow-md">
+                💾 Lưu Cấu Hình Giao Diện
+            </button>
+        </section>
+
+        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC ================= -->
+        <section id="adminTab-posts" class="admin-tab-content space-y-8">
+            <!-- Form Thêm bài đọc mới -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-base font-bold text-slate-900">➕ Đăng Bài Đọc Luyện Tập Mới</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Nhập thông tin bài đọc để hiển thị ở Tab "Bài Đọc" của học viên.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="postTitle" placeholder="Tiêu đề bài học (VD: Bài 1: 周末你做什么？)" class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 3, HSK 4, B2B)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                </div>
+                <textarea id="postContent" rows="4" placeholder="Nội dung chữ Hán (Có thể dán thẻ <ruby>中文<rt>zhōngwén</rt></ruby> để hiện Pinyin chuẩn)..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+
+                <button onclick="addNewPost()" class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-500 transition shadow-md">
+                    🚀 Đăng Bài Đọc Mới
+                </button>
+            </div>
+
+            <!-- Danh sách bài đã đăng kèm nút Xóa -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-4">
+                <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">📑 Danh Sách Bài Đọc Hiện Có</h2>
+                <div id="adminPostsList" class="space-y-4">
+                    <p class="text-xs text-slate-400">Đang tải danh sách bài đọc...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: QUẢN LÝ KHÓA HỌC & TÀI LIỆU ================= -->
+        <section id="adminTab-courses" class="admin-tab-content space-y-8">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-base font-bold text-slate-900">🎓 Thêm Khóa Học / Tài Liệu Mới</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Quản lý các sản phẩm hiển thị tại Tab "Khóa Học & Tài Liệu".</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="courseTitle" placeholder="Tên khóa học/Ebook (VD: Ebook 100 Bài Đọc B2B)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="courseBadge" placeholder="Nhãn (VD: Combo Ebook, Coaching 1:1)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="coursePrice" placeholder="Giá bán (VD: 299.000đ)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="courseOldPrice" placeholder="Giá gốc gạch đi (VD: 500.000đ)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                </div>
+                <textarea id="courseDesc" rows="3" placeholder="Mô tả vắn tắt về lộ trình hoặc nội dung tài liệu..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+
+                <button onclick="addNewCourse()" class="bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-indigo-500 transition shadow-md">
+                    ➕ Thêm Khóa Học Mới
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-4">
+                <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">📦 Danh Sách Khóa Học Trên System</h2>
+                <div id="adminCoursesList" class="space-y-4">
+                    <p class="text-xs text-slate-400">Đang tải danh sách khóa học...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: TIẾN ĐỘ HỌC VIÊN ================= -->
+        <section id="adminTab-students" class="admin-tab-content bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+                <h2 class="text-base font-bold text-slate-900">👥 Theo Dõi Tiến Độ Luyện Tập Của Học Viên</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Danh sách lịch sử học viên bấm "Đánh dấu Đã học" lưu trữ từ Firebase.</p>
+            </div>
+
+            <div id="studentsProgressList" class="space-y-3">
+                <p class="text-xs text-slate-400">Đang nạp dữ liệu học viên...</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- BẢO MẬT & CHẶN SAO CHÉP / F12 -->
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83)) { // C, U, S
+                e.preventDefault();
+            }
+            if (e.keyCode === 123) { // F12
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <!-- FIREBASE & LOGIC ADMIN SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
+            authDomain: "hanhphuc114-47ee3.firebaseapp.com",
+            projectId: "hanhphuc114-47ee3",
+            storageBucket: "hanhphuc114-47ee3.firebasestorage.app",
+            messagingSenderId: "160765310205",
+            appId: "1:160765310205:web:e3a21bd5a7082587133a94",
+            measurementId: "G-C5L19WCC4G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Chuyển Tab Admin
+        window.switchAdminTab = function(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.admin-nav-btn').forEach(el => {
+                el.classList.remove('bg-white', 'text-slate-900', 'shadow-sm', 'font-bold');
+                el.classList.add('text-slate-600', 'font-semibold');
+            });
+
+            document.getElementById(`adminTab-${tabName}`).classList.add('active');
+            const activeBtn = document.getElementById(`adminNav-${tabName}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm', 'font-bold');
+                activeBtn.classList.remove('text-slate-600', 'font-semibold');
+            }
+        };
+
+        // Xác thực mật khẩu
+        window.checkLogin = function() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === '123456') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminContent').classList.remove('hidden');
+                loadAllAdminData();
+            } else {
+                alert('Mật khẩu quản trị không đúng!');
+            }
+        };
+
+        // TAB 1: Lưu cấu hình Giao diện
+        window.saveThemeSettings = async function() {
+            const themeColor = document.getElementById('themeColor').value;
+            const showHero = document.getElementById('showHero').checked;
+            const showPinyinToggle = document.getElementById('showPinyinToggle').checked;
+
+            try {
+                await setDoc(doc(db, "settings", "global"), {
+                    themeColor,
+                    showHero,
+                    showPinyinToggle,
+                    updatedAt: new Date()
+                });
+                alert('Đã cập nhật cấu hình giao diện thành công!');
+            } catch (e) {
+                console.error(e);
+                alert('Không thể lưu giao diện.');
+            }
+        };
+
+        // TAB 2: Thêm & Xóa Bài Đọc
+        window.addNewPost = async function() {
+            const title = document.getElementById('postTitle').value;
+            const tag = document.getElementById('postTag').value;
+            const content = document.getElementById('postContent').value;
+
+            if (!title || !content) { alert('Vui lòng nhập đầy đủ tiêu đề và nội dung.'); return; }
+
+            try {
+                await addDoc(collection(db, "posts"), {
+                    title,
+                    tag: tag || 'HSK',
+                    content,
+                    createdAt: new Date()
+                });
+                alert('Đã xuất bản bài đọc mới thành công!');
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postTag').value = '';
+                document.getElementById('postContent').value = '';
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        window.deletePost = async function(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa bài đọc này khỏi hệ thống?')) {
+                try {
+                    await deleteDoc(doc(db, "posts", id));
+                    alert('Đã xóa bài đọc.');
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        };
+
+        // TAB 3: Thêm & Xóa Khóa học
+        window.addNewCourse = async function() {
+            const title = document.getElementById('courseTitle').value;
+            const badge = document.getElementById('courseBadge').value;
+            const price = document.getElementById('coursePrice').value;
+            const oldPrice = document.getElementById('courseOldPrice').value;
+            const desc = document.getElementById('courseDesc').value;
+
+            if (!title || !price) { alert('Vui lòng điền tên khóa học và giá bán.'); return; }
+
+            try {
+                await addDoc(collection(db, "courses"), {
+                    title,
+                    badge: badge || 'Khóa Học',
+                    price,
+                    oldPrice: oldPrice || '',
+                    desc,
+                    createdAt: new Date()
+                });
+                alert('Đã thêm khóa học mới!');
+                document.getElementById('courseTitle').value = '';
+                document.getElementById('courseBadge').value = '';
+                document.getElementById('coursePrice').value = '';
+                document.getElementById('courseOldPrice').value = '';
+                document.getElementById('courseDesc').value = '';
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        window.deleteCourse = async function(id) {
+            if (confirm('Xóa khóa học này?')) {
+                try {
+                    await deleteDoc(doc(db, "courses", id));
+                    alert('Đã xóa khóa học.');
+                } catch (e) { console.error(e); }
+            }
+        };
+
+        // Tải toàn bộ dữ liệu Realtime vào Admin
+        function loadAllAdminData() {
+            // Read Bài đọc
+            onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
+                let html = '';
+                if (!snapshot.empty) {
+                    snapshot.forEach(docSnap => {
+                        const p = docSnap.data();
+                        html += `
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded">${p.tag || 'HSK'}</span>
+                                        <h4 class="font-bold text-sm text-slate-900">${p.title}</h4>
+                                    </div>
+                                    <p class="text-xs text-slate-500 line-clamp-1">${p.content.replace(/<[^>]*>/g, '')}</p>
+                                </div>
+                                <button onclick="deletePost('${docSnap.id}')" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition">Xóa</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = `<p class="text-xs text-slate-400">Chưa có bài đọc nào.</p>`;
+                }
+                document.getElementById('adminPostsList').innerHTML = html;
+            });
+
+            // Read Khóa học
+            onSnapshot(query(collection(db, "courses"), orderBy("createdAt", "desc")), (snapshot) => {
+                let html = '';
+                if (!snapshot.empty) {
+                    snapshot.forEach(docSnap => {
+                        const c = docSnap.data();
+                        html += `
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                                <div>
+                                    <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded">${c.badge}</span>
+                                    <h4 class="font-bold text-sm text-slate-900 mt-1">${c.title}</h4>
+                                    <p class="text-xs font-bold text-emerald-600">${c.price} ${c.oldPrice ? `<span class="line-through text-slate-400 text-[10px]">${c.oldPrice}</span>` : ''}</p>
+                                </div>
+                                <button onclick="deleteCourse('${docSnap.id}')" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition">Xóa</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = `<p class="text-xs text-slate-400">Chưa có khóa học nào.</p>`;
+                }
+                document.getElementById('adminCoursesList').innerHTML = html;
+            });
+
+            // Read Tiến độ Học viên
+            onSnapshot(query(collection(db, "user_progress"), orderBy("completedAt", "desc")), (snapshot) => {
+                let html = '';
+                if (!snapshot.empty) {
+                    snapshot.forEach(docSnap => {
+                        const s = docSnap.data();
+                        html += `
+                            <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900">${s.userName || 'Học viên'} <span class="font-normal text-slate-400">(${s.email || ''})</span></p>
+                                    <p class="text-slate-600 mt-0.5">Đã hoàn thành: <span class="font-semibold text-emerald-600">${s.lesson}</span></p>
+                                </div>
+                                <span class="text-[10px] text-slate-400">Đã ghi nhận</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = `<p class="text-xs text-slate-400">Chưa có học viên nào bấm hoàn thành bài học.</p>`;
+                }
+                document.getElementById('studentsProgressList').innerHTML = html;
+            });
+        }
+    </script>
+</body>
+</html>

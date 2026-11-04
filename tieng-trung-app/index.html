@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸福中文 - Tiếng Trung Hạnh Phúc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        ruby rt { font-size: 0.75rem; font-weight: 600; color: #475569; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased">
+    
+    <!-- HEADER & NAVIGATION -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div id="logoBox" class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-lg shadow-sm">福</div>
+                <div>
+                    <span class="font-extrabold text-base text-slate-900 tracking-tight block">幸福中文</span>
+                    <span class="text-[10px] text-slate-500 font-bold tracking-widest uppercase block -mt-1">Tiếng Trung Hạnh Phúc</span>
+                </div>
+            </div>
+            
+            <!-- Menu 4 Mục -->
+            <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-900 bg-white shadow-sm transition">Trang Chủ</button>
+                <button onclick="switchTab('reading')" id="nav-reading" class="nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Bài Đọc</button>
+                <button onclick="switchTab('courses')" id="nav-courses" class="nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Khóa Học & Tài Liệu</button>
+                <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Góc Cá Nhân</button>
+            </nav>
+
+            <!-- Auth Button -->
+            <div id="authContainer">
+                <button onclick="loginWithGoogle()" class="bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-slate-800 transition shadow-sm">
+                    Đăng nhập Google
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH (SPA TABS) -->
+    <main class="max-w-5xl mx-auto px-6 py-10 flex-grow w-full">
+
+        <!-- ================= TAB 1: TRANG CHỦ & HƯỚNG DẪN ================= -->
+        <section id="tab-home" class="tab-content active space-y-12">
+            <!-- Hero -->
+            <div id="heroSection" class="bg-white border border-slate-200/80 rounded-3xl p-8 md:p-12 text-center shadow-sm space-y-4">
+                <span id="heroBadge" class="inline-block bg-emerald-50 text-emerald-700 text-xs font-bold px-3.5 py-1.5 rounded-lg uppercase tracking-wider">
+                    Nền tảng luyện phản xạ & Đọc hiểu cá nhân hóa
+                </span>
+                <h1 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                    Chinh Phục Tiếng Trung Qua <br><span id="heroHighlight" class="text-emerald-600">Đọc Hiểu & Shadowing</span>
+                </h1>
+                <p class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+                    Tích lũy từ vựng tự nhiên qua các đoạn văn ngắn, luyện phản xạ phát âm chuẩn bản xứ và ghi nhớ tiến trình học tập mỗi ngày.
+                </p>
+                <div class="pt-4 flex justify-center gap-4">
+                    <button onclick="switchTab('reading')" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-2xl text-xs hover:bg-slate-800 transition shadow-md">Bắt Đầu Học Ngay</button>
+                    <button onclick="switchTab('courses')" class="bg-white border border-slate-300 text-slate-700 font-bold px-6 py-3 rounded-2xl text-xs hover:bg-slate-50 transition">Khám Phá Khóa Học</button>
+                </div>
+            </div>
+
+            <!-- Hướng dẫn 3 bước -->
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-slate-900 tracking-tight">💡 Lộ trình 3 bước học hiệu quả</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">1</div>
+                        <h3 class="font-bold text-sm text-slate-900">Đọc & Nhận Diện Từ Vựng</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Đọc bài văn ngắn theo cấp độ HSK. Sử dụng công tắc Pinyin khi cần hỗ trợ phiên âm.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">2</div>
+                        <h3 class="font-bold text-sm text-slate-900">Luyện Nghe & Shadowing</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Nhấn nút "Nghe phát âm mẫu" để máy đọc giọng chuẩn bản xứ, lặp lại ngữ điệu theo mẫu.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">3</div>
+                        <h3 class="font-bold text-sm text-slate-900">Ghi Nhớ Tiến Độ</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Đánh dấu "Đã học" để hệ thống tự động lưu trữ bài học vào Hồ sơ cá nhân của bạn.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: THƯ VIỆN BÀI ĐỌC ================= -->
+        <section id="tab-reading" class="tab-content space-y-8">
+            <!-- Thanh điều khiển Bài đọc -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900">Thư Viện Bài Đọc Luyện Tập</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Chọn bài viết phù hợp với trình độ để bắt đầu luyện phản xạ.</p>
+                </div>
+                <label id="pinyinControl" class="text-xs font-semibold text-slate-700 flex items-center cursor-pointer select-none bg-slate-50 px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
+                    <input type="checkbox" id="togglePinyin" checked onchange="togglePinyinDisplay()" class="w-4 h-4 rounded mr-2 accent-slate-900"> Hiển thị Pinyin
+                </label>
+            </div>
+
+            <!-- Danh sách bài viết -->
+            <div id="postsList" class="space-y-6">
+                <!-- Mẫu hiển thị trong khi tải dữ liệu -->
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400">
+                    Đang tải danh sách bài đọc từ cơ sở dữ liệu...
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: KHÓA HỌC & TÀI LIỆU ================= -->
+        <section id="tab-courses" class="tab-content space-y-8">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 tracking-tight">📚 Khóa Học & Bộ Tài Liệu Nâng Cao</h2>
+                <p class="text-xs text-slate-500 mt-1">Các chương trình đóng gói bài bản dành riêng cho học viên Tiếng Trung Hạnh Phúc.</p>
+            </div>
+
+            <!-- Grid hiển thị Khóa học từ Firestore (Admin quản lý) -->
+            <div id="coursesListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 md:col-span-2">
+                    Đang tải danh sách khóa học...
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: GÓC CÁ NHÂN (STUDENT DASHBOARD) ================= -->
+        <section id="tab-profile" class="tab-content space-y-8">
+            <div id="unauthProfileView" class="bg-white border border-slate-200/80 rounded-3xl p-10 text-center space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto text-xl font-bold">👤</div>
+                <h3 class="text-lg font-bold text-slate-900">Chưa Đăng Nhập Tài Khoản</h3>
+                <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                    Đăng nhập tài khoản Google để theo dõi tiến độ học tập, xem danh sách bài học đã hoàn thành và lưu trữ sổ từ vựng cá nhân.
+                </p>
+                <button onclick="loginWithGoogle()" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-2xl text-xs hover:bg-slate-800 transition">
+                    Đăng Nhập Bằng Google
+                </button>
+            </div>
+
+            <div id="authProfileView" class="hidden space-y-8">
+                <!-- User Info Box -->
+                <div class="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 shadow-sm flex items-center gap-5">
+                    <img id="userAvatar" src="" class="w-16 h-16 rounded-2xl border-2 border-slate-200 object-cover" alt="Avatar">
+                    <div>
+                        <h2 id="userName" class="text-xl font-bold text-slate-900">...</h2>
+                        <p id="userEmail" class="text-xs text-slate-500 mt-0.5">...</p>
+                        <span class="inline-block bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded mt-2">Học viên Chính thức</span>
+                    </div>
+                </div>
+
+                <!-- Thống kê Tiến độ -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500">Bài đọc đã hoàn thành</p>
+                            <p id="completedCount" class="text-3xl font-black text-slate-900 mt-1">0</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xl">✓</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500">Trạng thái tài khoản</p>
+                            <p class="text-base font-bold text-emerald-600 mt-1">Hoạt động bình thường</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xl">🔥</div>
+                    </div>
+                </div>
+
+                <!-- Lịch sử bài đã học -->
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-slate-900">📜 Lịch Sử Bài Học Đã Đánh Dấu</h3>
+                    <div id="historyList" class="space-y-3">
+                        <p class="text-xs text-slate-400">Chưa có dữ liệu bài học.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-400 mt-auto">
+        <p>© 2026 幸福中文 (Tiếng Trung Hạnh Phúc) - Hệ thống Luyện Đọc & Shadowing Tối Giản</p>
+    </footer>
+
+    <!-- FIREBASE & LOGIC SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
+            authDomain: "hanhphuc114-47ee3.firebaseapp.com",
+            projectId: "hanhphuc114-47ee3",
+            storageBucket: "hanhphuc114-47ee3.firebasestorage.app",
+            messagingSenderId: "160765310205",
+            appId: "1:160765310205:web:e3a21bd5a7082587133a94",
+            measurementId: "G-C5L19WCC4G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Chuyển Tab Single Page Application
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-white', 'text-slate-900', 'shadow-sm', 'font-bold');
+                el.classList.add('text-slate-600', 'font-semibold');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-white', 'text-slate-900', 'shadow-sm', 'font-bold');
+                activeNav.classList.remove('text-slate-600', 'font-semibold');
+            }
+        };
+
+        // Đăng nhập Google
+        window.loginWithGoogle = async function() {
+            try { await signInWithPopup(auth, provider); } catch (e) { console.error("Lỗi Auth:", e); }
+        };
+
+        // Đăng xuất
+        window.logoutAcc = async function() { await signOut(auth); };
+
+        // Phát âm câu tiếng Trung (Speech Synthesis)
+        window.speakChinese = function(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.85; // Tốc độ đọc vừa phải cho luyện Shadowing
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Trình duyệt của bạn không hỗ trợ tính năng phát âm.');
+            }
+        };
+
+        // Đánh dấu đã học & Lưu Firebase
+        window.saveUserProgress = async function(lessonTitle) {
+            const user = auth.currentUser;
+            if (!user) { 
+                alert('Vui lòng đăng nhập tài khoản Google để lưu bài học vào Hồ sơ!'); 
+                loginWithGoogle(); 
+                return; 
+            }
+            try {
+                await setDoc(doc(db, "user_progress", `${user.uid}_${Date.now()}`), {
+                    userId: user.uid,
+                    userName: user.displayName,
+                    email: user.email,
+                    lesson: lessonTitle,
+                    completedAt: new Date()
+                });
+                alert(`Đã lưu bài học: "${lessonTitle}" vào Góc cá nhân của bạn!`);
+                loadStudentProfile(user);
+            } catch (e) {
+                console.error("Lỗi lưu tiến trình:", e);
+            }
+        };
+
+        // Ẩn/Hiện Pinyin
+        window.togglePinyinDisplay = function() {
+            const show = document.getElementById('togglePinyin').checked;
+            document.querySelectorAll('rt').forEach(rt => rt.style.display = show ? 'inline' : 'none');
+        };
+
+        // Lắng nghe thay đổi User Auth
+        onAuthStateChanged(auth, (user) => {
+            const authContainer = document.getElementById('authContainer');
+            const unauthProfileView = document.getElementById('unauthProfileView');
+            const authProfileView = document.getElementById('authProfileView');
+
+            if (user) {
+                authContainer.innerHTML = `
+                    <div class="flex items-center gap-3 bg-slate-100 p-1.5 pr-3 rounded-2xl border border-slate-200">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/32'}" class="w-7 h-7 rounded-xl object-cover" alt="Avatar">
+                        <div class="text-left hidden sm:block">
+                            <p class="text-xs font-bold text-slate-900 leading-none">${user.displayName}</p>
+                            <button onclick="logoutAcc()" class="text-[10px] text-slate-400 hover:text-red-600 font-medium">Đăng xuất</button>
+                        </div>
+                    </div>
+                `;
+                unauthProfileView.classList.add('hidden');
+                authProfileView.classList.remove('hidden');
+                loadStudentProfile(user);
+            } else {
+                authContainer.innerHTML = `
+                    <button onclick="loginWithGoogle()" class="bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-slate-800 transition shadow-sm">
+                        Đăng nhập Google
+                    </button>
+                `;
+                unauthProfileView.classList.remove('hidden');
+                authProfileView.classList.add('hidden');
+            }
+        });
+
+        // Load dữ liệu Góc cá nhân
+        async function loadStudentProfile(user) {
+            document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/64';
+            document.getElementById('userName').textContent = user.displayName;
+            document.getElementById('userEmail').textContent = user.email;
+
+            try {
+                const q = query(collection(db, "user_progress"), where("userId", "==", user.uid));
+                const snapshot = await getDocs(q);
+                document.getElementById('completedCount').textContent = snapshot.size;
+
+                if (!snapshot.empty) {
+                    let historyHtml = '';
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        historyHtml += `
+                            <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                                <span class="font-bold text-slate-800">✓ ${data.lesson}</span>
+                                <span class="text-[10px] text-slate-400">Đã hoàn thành</span>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('historyList').innerHTML = historyHtml;
+                }
+            } catch (e) {
+                console.error("Lỗi nạp lịch sử học:", e);
+            }
+        }
+
+        // Realtime Theme Settings từ Admin
+        onSnapshot(doc(db, "settings", "global"), (docSnap) => {
+            if (docSnap.exists()) {
+                const config = docSnap.data();
+                const heroSection = document.getElementById('heroSection');
+                const pinyinControl = document.getElementById('pinyinControl');
+                const logoBox = document.getElementById('logoBox');
+                const heroHighlight = document.getElementById('heroHighlight');
+
+                if (config.showHero === false) heroSection.classList.add('hidden');
+                else heroSection.classList.remove('hidden');
+
+                if (config.showPinyinToggle === false) pinyinControl.classList.add('hidden');
+                else pinyinControl.classList.remove('hidden');
+
+                if (config.themeColor === 'indigo') {
+                    logoBox.className = "w-10 h-10 rounded-xl bg-indigo-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    heroHighlight.className = "text-indigo-600";
+                } else if (config.themeColor === 'slate') {
+                    logoBox.className = "w-10 h-10 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    heroHighlight.className = "text-slate-900";
+                } else if (config.themeColor === 'amber') {
+                    logoBox.className = "w-10 h-10 rounded-xl bg-amber-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    heroHighlight.className = "text-amber-600";
+                } else {
+                    logoBox.className = "w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    heroHighlight.className = "text-emerald-600";
+                }
+            }
+        });
+
+        // Realtime Posts từ Admin
+        onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
+            if (!snapshot.empty) {
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const p = docSnap.data();
+                    html += `
+                        <article class="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-5">
+                            <div class="flex items-center justify-between">
+                                <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider">${p.tag || 'HSK'}</span>
+                                <span class="text-[11px] text-slate-400 font-medium">Nội dung bài học</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 tracking-tight">${p.title}</h3>
+                            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-lg font-medium text-slate-800 leading-relaxed">
+                                ${p.content}
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+                                <button onclick="speakChinese('${p.content.replace(/'/g, "\\'")}')" class="text-xs font-bold text-slate-700 bg-white border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-50 transition flex items-center gap-2">
+                                    🔊 Nghe phát âm mẫu (Shadowing)
+                                </button>
+                                <button onclick="saveUserProgress('${p.title.replace(/'/g, "\\'")}')" class="text-xs font-bold text-white bg-slate-900 px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">
+                                    ✓ Đánh dấu Đã học
+                                </button>
+                            </div>
+                        </article>
+                    `;
+                });
+                document.getElementById('postsList').innerHTML = html;
+            } else {
+                document.getElementById('postsList').innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Chưa có bài đọc nào. Vui lòng thêm bài từ trang Admin.</p>`;
+            }
+        });
+
+        // Realtime Courses từ Admin
+        onSnapshot(query(collection(db, "courses"), orderBy("createdAt", "desc")), (snapshot) => {
+            let coursesHtml = '';
+            if (!snapshot.empty) {
+                snapshot.forEach((docSnap) => {
+                    const c = docSnap.data();
+                    coursesHtml += `
+                        <div class="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm flex flex-col justify-between space-y-6">
+                            <div class="space-y-3">
+                                <span class="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider">${c.badge || 'Khóa học'}</span>
+                                <h3 class="text-lg font-bold text-slate-900">${c.title}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${c.desc || ''}</p>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <div>
+                                    ${c.oldPrice ? `<span class="text-xs text-slate-400 line-through">${c.oldPrice}</span>` : ''}
+                                    <p class="text-base font-black text-slate-900">${c.price}</p>
+                                </div>
+                                <button onclick="alert('Đang kết nối cổng thanh toán SePay / Đăng ký...')" class="bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">Đăng Ký Ngay</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                coursesHtml = `<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 md:col-span-2">Chưa có khóa học nào được đăng.</div>`;
+            }
+            const gridContainer = document.getElementById('coursesListGrid');
+            if (gridContainer) gridContainer.innerHTML = coursesHtml;
+        });
+    </script>
+</body>
+</html>
