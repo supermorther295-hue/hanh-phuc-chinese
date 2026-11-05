@@ -23,13 +23,16 @@
 <body class="bg-gray-50 text-gray-800 relative min-h-screen pb-20">
 
     <!-- POPUP TRA TỪ KHI BÔI ĐEN -->
-    <div id="wordPopup" class="hidden absolute z-50 bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-700 text-xs max-w-xs transition-all">
-        <div class="flex justify-between items-center mb-1 gap-3">
+    <div id="wordPopup" class="hidden absolute z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-xl border border-slate-700 text-xs max-w-xs transition-all">
+        <div class="flex justify-between items-center mb-1 gap-4">
             <span id="popupWord" class="font-bold text-base text-amber-400"></span>
-            <button onclick="closeWordPopup()" class="text-slate-400 hover:text-white font-bold">✕</button>
+            <button onclick="closeWordPopup()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
         </div>
-        <p id="popupMeaning" class="text-slate-300 text-[11px] mb-2">Đang tải nghĩa từ vựng...</p>
-        <button onclick="saveWordToPersonalDict()" id="saveWordBtn" class="w-full py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg transition text-[11px] flex items-center justify-center gap-1">
+        <div id="popupDetails" class="space-y-1 mb-3">
+            <p id="popupPinyin" class="text-blue-400 font-semibold text-xs"></p>
+            <p id="popupMeaning" class="text-slate-200 text-xs"></p>
+        </div>
+        <button onclick="saveWordToPersonalDict()" id="saveWordBtn" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition text-xs flex items-center justify-center gap-1 shadow-md">
             ⭐ Lưu vào Sổ từ vựng cá nhân
         </button>
     </div>
@@ -51,10 +54,10 @@
 
         <!-- Hướng dẫn bôi đen -->
         <div class="text-[11px] text-slate-400 bg-slate-50 p-2.5 rounded-lg mb-4 flex items-center gap-1.5 border border-slate-100">
-            💡 <span>Tip: <b>Bôi đen (Highlight)</b> từ tiếng Trung bất kỳ trong bài để tra cứu và lưu nhanh vào Sổ từ vựng cá nhân.</span>
+            💡 <span>Tip: <b>Bôi đen (Highlight)</b> từ tiếng Trung bất kỳ trong bài để xem nghĩa tiếng Việt và lưu nhanh vào Sổ từ vựng cá nhân.</span>
         </div>
 
-        <!-- Nội dung bài đọc (Hỗ trợ Shadowing từng câu) -->
+        <!-- Nội dung bài đọc -->
         <div id="article-container" class="space-y-4">
             <div id="article-content" class="space-y-4 text-lg leading-relaxed">
                 <!-- Dữ liệu từng câu sẽ được render ở đây -->
@@ -79,7 +82,7 @@
     </div>
 
     <script>
-        // Cấu hình Firebase của bạn
+        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
             authDomain: "hanhphuc114-47ee3.firebaseapp.com",
@@ -94,11 +97,30 @@
         }
         const db = firebase.firestore();
 
-        // Lấy ID bài viết từ URL
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
         let currentLessonTitle = "";
         let selectedWordText = "";
+        let selectedWordMeaning = "";
+
+        // Từ điển mẫu tra cứu nhanh (Bạn có thể bổ sung thêm tùy ý)
+        const miniDict = {
+            "平时": { pinyin: "píngshí", meaning: "thường ngày, bình thường" },
+            "周末": { pinyin: "zhōumò", meaning: "cuối tuần" },
+            "喜欢": { pinyin: "xǐhuan", meaning: "thích, yêu thích" },
+            "做什么": { pinyin: "zuò shénme", meaning: "làm gì" },
+            " Pinyin ": { pinyin: "", meaning: "" },
+            "工作": { pinyin: "gōngzuò", meaning: "công việc, làm việc" },
+            "很": { pinyin: "hěn", meaning: "rất" },
+            "忙": { pinyin: "máng", meaning: "bận rộn" },
+            "所以": { pinyin: "suǒyǐ", meaning: "cho nên, vì vậy" },
+            "对": { pinyin: "duì", meaning: "đối với" },
+            "非常": { pinyin: "fēicháng", meaning: "vô cùng, cực kỳ" },
+            "重要": { pinyin: "zhòngyào", meaning: "quan trọng" },
+            "朋友": { pinyin: "péngyou", meaning: "bạn bè" },
+            "常常": { pinyin: "chángcháng", meaning: "thường xuyên" },
+            " and ": { pinyin: "", meaning: "" }
+        };
 
         if (postId) {
             db.collection("posts").doc(postId).get().then((doc) => {
@@ -130,16 +152,11 @@
                         contentHtml = `<p>Chưa có nội dung chi tiết cho bài này.</p>`;
                     }
                     document.getElementById('article-content').innerHTML = contentHtml;
-
-                    // Render mục ngữ pháp
                     document.getElementById('post-grammar').innerHTML = data.grammar ? data.grammar.replace(/\n/g, '<br>') : "Không có điểm ngữ pháp chuyên sâu trong bài này.";
-                } else {
-                    document.getElementById('article-content').innerHTML = "<p>Không tìm thấy bài viết.</p>";
                 }
             });
         }
 
-        // Hàm Bật/Tắt Pinyin và Nghĩa tiếng Việt
         function togglePinyinAndMeaning() {
             const isChecked = document.getElementById('pinyinToggleCheckbox').checked;
             const container = document.getElementById('article-container');
@@ -150,7 +167,6 @@
             }
         }
 
-        // ĐÁNH DẤU HOÀN THÀNH BÀI HỌC
         async function markAsCompleted() {
             if (!currentLessonTitle) return;
             try {
@@ -166,12 +182,11 @@
                 btn.disabled = true;
                 document.getElementById('completionStatus').classList.remove('hidden');
             } catch (e) {
-                console.error("Lỗi lưu tiến độ:", e);
-                alert("Không thể ghi nhận hoàn thành.");
+                console.error(e);
             }
         }
 
-        // BÔI ĐEN TRA TỪ
+        // BÔI ĐEN TRA TỪ TỰ ĐỘNG
         document.addEventListener('mouseup', function(e) {
             const selection = window.getSelection();
             const text = selection.toString().trim();
@@ -180,7 +195,17 @@
                 selectedWordText = text;
                 const popup = document.getElementById('wordPopup');
                 document.getElementById('popupWord').innerText = text;
-                document.getElementById('popupMeaning').innerText = `Từ vựng bôi đen: "${text}"`;
+
+                // Kiểm tra xem từ bôi đen có trong từ điển mini không
+                if (miniDict[text]) {
+                    selectedWordMeaning = miniDict[text].meaning;
+                    document.getElementById('popupPinyin').innerText = `Pinyin: ${miniDict[text].pinyin}`;
+                    document.getElementById('popupMeaning').innerText = `Nghĩa: ${miniDict[text].meaning}`;
+                } else {
+                    selectedWordMeaning = "Từ vựng tra cứu nhanh";
+                    document.getElementById('popupPinyin').innerText = "";
+                    document.getElementById('popupMeaning').innerText = `Nghĩa: [Đã chọn] ${text}`;
+                }
 
                 popup.style.top = `${e.pageY + 10}px`;
                 popup.style.left = `${Math.min(e.pageX - 50, window.innerWidth - 220)}px`;
@@ -192,7 +217,6 @@
             document.getElementById('wordPopup').classList.add('hidden');
         }
 
-        // LƯU TỪ VỰNG VÀO SỔ TỪ CÁ NHÂN (FIRESTORE)
         async function saveWordToPersonalDict() {
             if (!selectedWordText) return;
             const btn = document.getElementById('saveWordBtn');
@@ -201,19 +225,19 @@
             try {
                 await db.collection("user_vocabulary").add({
                     word: selectedWordText,
+                    meaning: selectedWordMeaning,
                     lessonTitle: currentLessonTitle,
                     savedAt: new Date()
                 });
                 btn.innerText = "✓ Đã lưu vào sổ từ!";
-                btn.className = "w-full py-1.5 bg-emerald-500 text-slate-950 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 cursor-default";
+                btn.className = "w-full py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1 cursor-default";
                 setTimeout(() => { closeWordPopup(); }, 1200);
             } catch (e) {
-                console.error("Lỗi lưu từ vựng:", e);
+                console.error(e);
                 alert("Lỗi khi lưu từ vựng.");
             }
         }
 
-        // Tính năng đọc mẫu (Shadowing sử dụng SpeechSynthesis API)
         function playAudio(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -221,8 +245,6 @@
                 utterance.lang = 'zh-CN'; 
                 utterance.rate = 0.85; 
                 window.speechSynthesis.speak(utterance);
-            } else {
-                alert("Trình duyệt của bạn không hỗ trợ tính năng phát âm thanh tự động.");
             }
         }
     </script>
