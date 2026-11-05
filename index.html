@@ -10,7 +10,6 @@
         body { font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        ruby rt { font-size: 0.75rem; font-weight: 600; color: #475569; }
     </style>
 </head>
 <body class="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased">
@@ -73,38 +72,33 @@
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
                         <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">1</div>
                         <h3 class="font-bold text-sm text-slate-900">Đọc & Nhận Diện Từ Vựng</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">Đọc bài văn ngắn theo cấp độ HSK. Sử dụng công tắc Pinyin khi cần hỗ trợ phiên âm.</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Chọn bài đọc theo cấp độ HSK. Bật/tắt Pinyin linh hoạt theo trình độ cá nhân.</p>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
                         <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">2</div>
                         <h3 class="font-bold text-sm text-slate-900">Luyện Nghe & Shadowing</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">Nhấn nút "Nghe phát âm mẫu" để máy đọc giọng chuẩn bản xứ, lặp lại ngữ điệu theo mẫu.</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Bấm nghe phát âm mẫu từng câu trong bài để luyện phản xạ nghe - nói chuẩn bản xứ.</p>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
                         <div class="w-8 h-8 rounded-lg bg-slate-100 font-black text-slate-900 flex items-center justify-center text-sm">3</div>
-                        <h3 class="font-bold text-sm text-slate-900">Ghi Nhớ Tiến Độ</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">Đánh dấu "Đã học" để hệ thống tự động lưu trữ bài học vào Hồ sơ cá nhân của bạn.</p>
+                        <h3 class="font-bold text-sm text-slate-900">Củng Cố Ngữ Pháp</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Ôn tập các điểm ngữ pháp quan trọng được tổng hợp chi tiết ngay phía cuối mỗi bài đọc.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 2: THƯ VIỆN BÀI ĐỌC ================= -->
-        <section id="tab-reading" class="tab-content space-y-8">
-            <!-- Thanh điều khiển Bài đọc -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+        <!-- ================= TAB 2: THƯ VIỆN BÀI ĐỌC (HIỂN THỊ GỌN GÀNG) ================= -->
+        <section id="tab-reading" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 class="text-base font-bold text-slate-900">Thư Viện Bài Đọc Luyện Tập</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Chọn bài viết phù hợp với trình độ để bắt đầu luyện phản xạ.</p>
+                    <h2 class="text-lg font-bold text-slate-900">📚 Thư Viện Bài Đọc Luyện Tập</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Chọn bài viết bên dưới để đi vào chi tiết bài học và luyện Shadowing.</p>
                 </div>
-                <label id="pinyinControl" class="text-xs font-semibold text-slate-700 flex items-center cursor-pointer select-none bg-slate-50 px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
-                    <input type="checkbox" id="togglePinyin" checked onchange="togglePinyinDisplay()" class="w-4 h-4 rounded mr-2 accent-slate-900"> Hiển thị Pinyin
-                </label>
             </div>
 
-            <!-- Danh sách bài viết -->
-            <div id="postsList" class="space-y-6">
-                <!-- Mẫu hiển thị trong khi tải dữ liệu -->
+            <!-- Danh sách bài viết dạng thu gọn (Tên bài + Trình độ) -->
+            <div id="postsList" class="space-y-3">
                 <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400">
                     Đang tải danh sách bài đọc từ cơ sở dữ liệu...
                 </div>
@@ -118,7 +112,6 @@
                 <p class="text-xs text-slate-500 mt-1">Các chương trình đóng gói bài bản dành riêng cho học viên Tiếng Trung Hạnh Phúc.</p>
             </div>
 
-            <!-- Grid hiển thị Khóa học từ Firestore (Admin quản lý) -->
             <div id="coursesListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 md:col-span-2">
                     Đang tải danh sách khóa học...
@@ -132,7 +125,7 @@
                 <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto text-xl font-bold">👤</div>
                 <h3 class="text-lg font-bold text-slate-900">Chưa Đăng Nhập Tài Khoản</h3>
                 <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-                    Đăng nhập tài khoản Google để theo dõi tiến độ học tập, xem danh sách bài học đã hoàn thành và lưu trữ sổ từ vựng cá nhân.
+                    Đăng nhập tài khoản Google để theo dõi tiến độ học tập và xem danh sách bài học đã hoàn thành.
                 </p>
                 <button onclick="loginWithGoogle()" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-2xl text-xs hover:bg-slate-800 transition">
                     Đăng Nhập Bằng Google
@@ -140,7 +133,6 @@
             </div>
 
             <div id="authProfileView" class="hidden space-y-8">
-                <!-- User Info Box -->
                 <div class="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 shadow-sm flex items-center gap-5">
                     <img id="userAvatar" src="" class="w-16 h-16 rounded-2xl border-2 border-slate-200 object-cover" alt="Avatar">
                     <div>
@@ -150,7 +142,6 @@
                     </div>
                 </div>
 
-                <!-- Thống kê Tiến độ -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
                         <div>
@@ -168,7 +159,6 @@
                     </div>
                 </div>
 
-                <!-- Lịch sử bài đã học -->
                 <div class="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-4">
                     <h3 class="text-base font-bold text-slate-900">📜 Lịch Sử Bài Học Đã Đánh Dấu</h3>
                     <div id="historyList" class="space-y-3">
@@ -189,7 +179,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, doc, where, getDocs } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
@@ -222,55 +212,17 @@
             }
         };
 
+        // Hàm chuyển hướng sang trang chi tiết bài đọc
+        window.openPostDetail = function(postId) {
+            window.location.href = `detail.html?id=${postId}`;
+        };
+
         // Đăng nhập Google
         window.loginWithGoogle = async function() {
             try { await signInWithPopup(auth, provider); } catch (e) { console.error("Lỗi Auth:", e); }
         };
 
-        // Đăng xuất
         window.logoutAcc = async function() { await signOut(auth); };
-
-        // Phát âm câu tiếng Trung (Speech Synthesis)
-        window.speakChinese = function(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-CN';
-                utterance.rate = 0.85; // Tốc độ đọc vừa phải cho luyện Shadowing
-                window.speechSynthesis.speak(utterance);
-            } else {
-                alert('Trình duyệt của bạn không hỗ trợ tính năng phát âm.');
-            }
-        };
-
-        // Đánh dấu đã học & Lưu Firebase
-        window.saveUserProgress = async function(lessonTitle) {
-            const user = auth.currentUser;
-            if (!user) { 
-                alert('Vui lòng đăng nhập tài khoản Google để lưu bài học vào Hồ sơ!'); 
-                loginWithGoogle(); 
-                return; 
-            }
-            try {
-                await setDoc(doc(db, "user_progress", `${user.uid}_${Date.now()}`), {
-                    userId: user.uid,
-                    userName: user.displayName,
-                    email: user.email,
-                    lesson: lessonTitle,
-                    completedAt: new Date()
-                });
-                alert(`Đã lưu bài học: "${lessonTitle}" vào Góc cá nhân của bạn!`);
-                loadStudentProfile(user);
-            } catch (e) {
-                console.error("Lỗi lưu tiến trình:", e);
-            }
-        };
-
-        // Ẩn/Hiện Pinyin
-        window.togglePinyinDisplay = function() {
-            const show = document.getElementById('togglePinyin').checked;
-            document.querySelectorAll('rt').forEach(rt => rt.style.display = show ? 'inline' : 'none');
-        };
 
         // Lắng nghe thay đổi User Auth
         onAuthStateChanged(auth, (user) => {
@@ -288,8 +240,8 @@
                         </div>
                     </div>
                 `;
-                unauthProfileView.classList.add('hidden');
-                authProfileView.classList.remove('hidden');
+                if(unauthProfileView) unauthProfileView.classList.add('hidden');
+                if(authProfileView) authProfileView.classList.remove('hidden');
                 loadStudentProfile(user);
             } else {
                 authContainer.innerHTML = `
@@ -297,12 +249,11 @@
                         Đăng nhập Google
                     </button>
                 `;
-                unauthProfileView.classList.remove('hidden');
-                authProfileView.classList.add('hidden');
+                if(unauthProfileView) unauthProfileView.classList.remove('hidden');
+                if(authProfileView) authProfileView.classList.add('hidden');
             }
         });
 
-        // Load dữ liệu Góc cá nhân
         async function loadStudentProfile(user) {
             document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/64';
             document.getElementById('userName').textContent = user.displayName;
@@ -336,57 +287,45 @@
             if (docSnap.exists()) {
                 const config = docSnap.data();
                 const heroSection = document.getElementById('heroSection');
-                const pinyinControl = document.getElementById('pinyinControl');
                 const logoBox = document.getElementById('logoBox');
                 const heroHighlight = document.getElementById('heroHighlight');
 
-                if (config.showHero === false) heroSection.classList.add('hidden');
-                else heroSection.classList.remove('hidden');
-
-                if (config.showPinyinToggle === false) pinyinControl.classList.add('hidden');
-                else pinyinControl.classList.remove('hidden');
+                if (heroSection) {
+                    if (config.showHero === false) heroSection.classList.add('hidden');
+                    else heroSection.classList.remove('hidden');
+                }
 
                 if (config.themeColor === 'indigo') {
-                    logoBox.className = "w-10 h-10 rounded-xl bg-indigo-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
-                    heroHighlight.className = "text-indigo-600";
+                    if(logoBox) logoBox.className = "w-10 h-10 rounded-xl bg-indigo-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    if(heroHighlight) heroHighlight.className = "text-indigo-600";
                 } else if (config.themeColor === 'slate') {
-                    logoBox.className = "w-10 h-10 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center text-lg shadow-sm";
-                    heroHighlight.className = "text-slate-900";
+                    if(logoBox) logoBox.className = "w-10 h-10 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    if(heroHighlight) heroHighlight.className = "text-slate-900";
                 } else if (config.themeColor === 'amber') {
-                    logoBox.className = "w-10 h-10 rounded-xl bg-amber-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
-                    heroHighlight.className = "text-amber-600";
+                    if(logoBox) logoBox.className = "w-10 h-10 rounded-xl bg-amber-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    if(heroHighlight) heroHighlight.className = "text-amber-600";
                 } else {
-                    logoBox.className = "w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
-                    heroHighlight.className = "text-emerald-600";
+                    if(logoBox) logoBox.className = "w-10 h-10 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-lg shadow-sm";
+                    if(heroHighlight) heroHighlight.className = "text-emerald-600";
                 }
             }
         });
 
-        // Realtime Posts từ Admin
+        // Realtime Posts từ Admin (Chỉ hiển thị Tên bài & Trình độ gọn gàng)
         onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
             if (!snapshot.empty) {
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const p = docSnap.data();
+                    const postId = docSnap.id;
                     html += `
-                        <article class="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-5">
-                            <div class="flex items-center justify-between">
-                                <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider">${p.tag || 'HSK'}</span>
-                                <span class="text-[11px] text-slate-400 font-medium">Nội dung bài học</span>
+                        <div onclick="openPostDetail('${postId}')" class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:border-slate-400 hover:shadow-md transition cursor-pointer flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="inline-block bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider">${p.level || p.tag || 'HSK'}</span>
+                                <h3 class="text-base font-bold text-slate-900">${p.title}</h3>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-900 tracking-tight">${p.title}</h3>
-                            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-lg font-medium text-slate-800 leading-relaxed">
-                                ${p.content}
-                            </div>
-                            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
-                                <button onclick="speakChinese('${p.content.replace(/'/g, "\\'")}')" class="text-xs font-bold text-slate-700 bg-white border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-50 transition flex items-center gap-2">
-                                    🔊 Nghe phát âm mẫu (Shadowing)
-                                </button>
-                                <button onclick="saveUserProgress('${p.title.replace(/'/g, "\\'")}')" class="text-xs font-bold text-white bg-slate-900 px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">
-                                    ✓ Đánh dấu Đã học
-                                </button>
-                            </div>
-                        </article>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl">Vào học →</span>
+                        </div>
                     `;
                 });
                 document.getElementById('postsList').innerHTML = html;
