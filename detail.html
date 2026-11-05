@@ -14,9 +14,25 @@
         .hide-extra .meaning-text {
             display: none !important;
         }
+        ::selection {
+            background-color: #fef08a;
+            color: #854d0e;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 relative min-h-screen pb-20">
+
+    <!-- POPUP TRA TỪ KHI BÔI ĐEN -->
+    <div id="wordPopup" class="hidden absolute z-50 bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-700 text-xs max-w-xs transition-all">
+        <div class="flex justify-between items-center mb-1 gap-3">
+            <span id="popupWord" class="font-bold text-base text-amber-400"></span>
+            <button onclick="closeWordPopup()" class="text-slate-400 hover:text-white font-bold">✕</button>
+        </div>
+        <p id="popupMeaning" class="text-slate-300 text-[11px] mb-2">Đang tải nghĩa từ vựng...</p>
+        <button onclick="saveWordToPersonalDict()" id="saveWordBtn" class="w-full py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg transition text-[11px] flex items-center justify-center gap-1">
+            ⭐ Lưu vào Sổ từ vựng cá nhân
+        </button>
+    </div>
 
     <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg my-10 rounded-xl">
         <!-- Nút quay lại & Công tắc Bật/Tắt Pinyin & Nghĩa -->
@@ -33,6 +49,11 @@
         <h1 id="post-title" class="text-2xl font-bold mb-2">Đang tải tiêu đề...</h1>
         <span id="post-level" class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold mb-6"></span>
 
+        <!-- Hướng dẫn bôi đen -->
+        <div class="text-[11px] text-slate-400 bg-slate-50 p-2.5 rounded-lg mb-4 flex items-center gap-1.5 border border-slate-100">
+            💡 <span>Tip: <b>Bôi đen (Highlight)</b> từ tiếng Trung bất kỳ trong bài để tra cứu và lưu nhanh vào Sổ từ vựng cá nhân.</span>
+        </div>
+
         <!-- Nội dung bài đọc (Hỗ trợ Shadowing từng câu) -->
         <div id="article-container" class="space-y-4">
             <div id="article-content" class="space-y-4 text-lg leading-relaxed">
@@ -46,6 +67,14 @@
             <div id="post-grammar" class="text-gray-700 space-y-2">
                 <!-- Nội dung ngữ pháp -->
             </div>
+        </div>
+
+        <!-- NÚT ĐÁNH DẤU HOÀN THÀNH BÀI HỌC -->
+        <div class="mt-10 pt-6 border-t border-gray-200 text-center space-y-3">
+            <button id="completeBtn" onclick="markAsCompleted()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2 mx-auto">
+                ✅ Đánh dấu ĐÃ HOÀN THÀNH bài đọc này
+            </button>
+            <p id="completionStatus" class="text-xs text-emerald-600 font-semibold hidden">🎉 Bài đọc này đã được lưu vào tiến độ cá nhân của bạn!</p>
         </div>
     </div>
 
@@ -68,30 +97,35 @@
         // Lấy ID bài viết từ URL
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
+        let currentLessonTitle = "";
+        let selectedWordText = "";
 
         if (postId) {
             db.collection("posts").doc(postId).get().then((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
+                    currentLessonTitle = data.title;
                     document.getElementById('post-title').innerText = data.title;
                     document.getElementById('post-level').innerText = data.level || 'HSK';
                     
                     let contentHtml = "";
-                    if(data.sentences && Array.isArray(data.sentences)) {
+                    if(data.sentences && Array.isArray(data.sentences) && data.sentences.length > 0) {
                         data.sentences.forEach((item) => {
                             contentHtml += `
-                                <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition flex justify-between items-center">
+                                <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition flex justify-between items-center gap-4">
                                     <div>
-                                        <p class="text-xl font-medium text-gray-900">${item.chinese}</p>
+                                        <p class="text-xl font-medium text-gray-900 select-text">${item.chinese}</p>
                                         <p class="pinyin-text text-xs text-blue-600 font-semibold mt-1">${item.pinyin || ''}</p>
                                         <p class="meaning-text text-sm text-gray-500 mt-0.5">${item.meaning || ''}</p>
                                     </div>
-                                    <button onclick="playAudio('${item.chinese.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                    <button onclick="playAudio('${item.chinese.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700 whitespace-nowrap">
                                         🔊 Nghe câu
                                     </button>
                                 </div>
                             `;
                         });
+                    } else if (data.content) {
+                        contentHtml = `<div class="p-5 bg-gray-50 rounded-lg"><p class="text-lg text-gray-900 leading-relaxed select-text">${data.content}</p></div>`;
                     } else {
                         contentHtml = `<p>Chưa có nội dung chi tiết cho bài này.</p>`;
                     }
@@ -113,6 +147,69 @@
                 container.classList.remove('hide-extra');
             } else {
                 container.classList.add('hide-extra');
+            }
+        }
+
+        // ĐÁNH DẤU HOÀN THÀNH BÀI HỌC
+        async function markAsCompleted() {
+            if (!currentLessonTitle) return;
+            try {
+                await db.collection("user_progress").add({
+                    userName: "Học viên",
+                    lesson: currentLessonTitle,
+                    lessonId: postId,
+                    completedAt: new Date()
+                });
+                const btn = document.getElementById('completeBtn');
+                btn.className = "px-8 py-3.5 bg-slate-200 text-slate-600 font-bold rounded-2xl cursor-not-allowed text-sm flex items-center justify-center gap-2 mx-auto";
+                btn.innerHTML = "🎉 Đã ghi nhận hoàn thành";
+                btn.disabled = true;
+                document.getElementById('completionStatus').classList.remove('hidden');
+            } catch (e) {
+                console.error("Lỗi lưu tiến độ:", e);
+                alert("Không thể ghi nhận hoàn thành.");
+            }
+        }
+
+        // BÔI ĐEN TRA TỪ
+        document.addEventListener('mouseup', function(e) {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+
+            if (text && /[\u4e00-\u9fa5]/.test(text)) {
+                selectedWordText = text;
+                const popup = document.getElementById('wordPopup');
+                document.getElementById('popupWord').innerText = text;
+                document.getElementById('popupMeaning').innerText = `Từ vựng bôi đen: "${text}"`;
+
+                popup.style.top = `${e.pageY + 10}px`;
+                popup.style.left = `${Math.min(e.pageX - 50, window.innerWidth - 220)}px`;
+                popup.classList.remove('hidden');
+            }
+        });
+
+        function closeWordPopup() {
+            document.getElementById('wordPopup').classList.add('hidden');
+        }
+
+        // LƯU TỪ VỰNG VÀO SỔ TỪ CÁ NHÂN (FIRESTORE)
+        async function saveWordToPersonalDict() {
+            if (!selectedWordText) return;
+            const btn = document.getElementById('saveWordBtn');
+            btn.innerText = "⏳ Đang lưu...";
+
+            try {
+                await db.collection("user_vocabulary").add({
+                    word: selectedWordText,
+                    lessonTitle: currentLessonTitle,
+                    savedAt: new Date()
+                });
+                btn.innerText = "✓ Đã lưu vào sổ từ!";
+                btn.className = "w-full py-1.5 bg-emerald-500 text-slate-950 font-bold rounded-lg text-[11px] flex items-center justify-center gap-1 cursor-default";
+                setTimeout(() => { closeWordPopup(); }, 1200);
+            } catch (e) {
+                console.error("Lỗi lưu từ vựng:", e);
+                alert("Lỗi khi lưu từ vựng.");
             }
         }
 
