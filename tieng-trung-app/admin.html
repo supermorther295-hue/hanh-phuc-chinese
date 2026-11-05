@@ -48,45 +48,67 @@
             <button onclick="switchAdminTab('students')" id="adminNav-students" class="admin-nav-btn px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition">👥 Tiến Độ Học Viên</button>
         </div>
 
-        <!-- ================= TAB 1: CẤU HÌNH GIAO DIỆN ================= -->
+        <!-- ================= TAB 1: CẤU HÌNH GIAO DIỆN & BÌA ================= -->
         <section id="adminTab-theme" class="admin-tab-content active bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
             <div class="border-b border-slate-100 pb-4">
-                <h2 class="text-base font-bold text-slate-900">🎨 Cài Đặt Giao Diện & Tone Màu Website</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Thay đổi màu sắc chủ đạo và bật/tắt các khu vực hiển thị ở trang của học viên.</p>
+                <h2 class="text-base font-bold text-slate-900">🎨 Cài Đặt Giao Diện & Tùy Chỉnh Hero Banner</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Thay đổi nội dung, màu sắc phần bìa mở đầu và cấu hình chung cho trang học viên.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Chọn Tone màu -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Màu chủ đạo (Primary Theme):</label>
-                    <select id="themeColor" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900">
-                        <option value="emerald">Xanh ngọc Emerald (Mặc định)</option>
-                        <option value="slate">Xám tối Minimalist (Đen/Trắng)</option>
-                        <option value="indigo">Xanh dương Indigo (Corporate)</option>
-                        <option value="amber">Vàng hổ phách Warm</option>
-                    </select>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Màu chủ đạo (Primary Theme):</label>
+                        <select id="themeColor" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900">
+                            <option value="emerald">Xanh ngọc Emerald (Mặc định)</option>
+                            <option value="slate">Xám tối Minimalist (Đen/Trắng)</option>
+                            <option value="indigo">Xanh dương Indigo (Corporate)</option>
+                            <option value="amber">Vàng hổ phách Warm</option>
+                        </select>
+                    </div>
+
+                    <!-- Bật / Tắt thành phần -->
+                    <div class="space-y-3 pt-2">
+                        <label class="block text-xs font-bold text-slate-700">Tùy chọn ẩn / hiện thành phần:</label>
+                        <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <input type="checkbox" id="showHero" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Hiển thị khung Hero Banner giới thiệu ở Trang chủ
+                        </label>
+                        <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <input type="checkbox" id="showPinyinToggle" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Cho phép học viên Bật/Tắt Pinyin
+                        </label>
+                    </div>
                 </div>
 
-                <!-- Bật / Tắt thành phần -->
-                <div class="space-y-3">
-                    <label class="block text-xs font-bold text-slate-700">Tùy chọn ẩn / hiện thành phần:</label>
-                    <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <input type="checkbox" id="showHero" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Hiển thị khung Hero Banner giới thiệu ở Trang chủ
-                    </label>
-                    <label class="flex items-center text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <input type="checkbox" id="showPinyinToggle" checked class="w-4 h-4 rounded mr-3 accent-slate-900"> Cho phép học viên Bật/Tắt Pinyin
-                    </label>
+                <!-- Cấu hình nội dung Hero Banner -->
+                <div class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">✏️ Nội Dung Phần Bìa (Hero Banner)</h3>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">Badge nhỏ phía trên:</label>
+                        <input type="text" id="heroBadge" placeholder="Nền tảng luyện phản xạ..." class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">Tiêu đề chính (Dòng 1):</label>
+                        <input type="text" id="heroTitle1" placeholder="Chinh Phục Tiếng Trung Qua" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">Tiêu đề nhấn mạnh (Dòng 2 - Màu xanh):</label>
+                        <input type="text" id="heroTitle2" placeholder="Đọc Hiểu & Shadowing" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">Đoạn mô tả ngắn:</label>
+                        <textarea id="heroDesc" rows="2" placeholder="Tích lũy từ vựng tự nhiên..." class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none"></textarea>
+                    </div>
                 </div>
             </div>
 
             <button onclick="saveThemeSettings()" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-slate-800 transition shadow-md">
-                💾 Lưu Cấu Hình Giao Diện
+                💾 Lưu Cấu Hình Giao Diện & Bìa
             </button>
         </section>
 
         <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC ================= -->
         <section id="adminTab-posts" class="admin-tab-content space-y-8">
-            <!-- Form Thêm bài đọc mới -->
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-base font-bold text-slate-900">➕ Đăng Bài Đọc Luyện Tập Mới</h2>
@@ -97,14 +119,13 @@
                     <input type="text" id="postTitle" placeholder="Tiêu đề bài học (VD: Bài 1: 周末你做什么？)" class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                     <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 3, HSK 4, B2B)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                 </div>
-                <textarea id="postContent" rows="4" placeholder="Nội dung chữ Hán (Có thể dán thẻ <ruby>中文<rt>zhōngwén</rt></ruby> để hiện Pinyin chuẩn)..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+                <textarea id="postContent" rows="4" placeholder="Nội dung chữ Hán..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
 
                 <button onclick="addNewPost()" class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-500 transition shadow-md">
                     🚀 Đăng Bài Đọc Mới
                 </button>
             </div>
 
-            <!-- Danh sách bài đã đăng kèm nút Xóa -->
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-4">
                 <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">📑 Danh Sách Bài Đọc Hiện Có</h2>
                 <div id="adminPostsList" class="space-y-4">
@@ -122,12 +143,12 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="courseTitle" placeholder="Tên khóa học/Ebook (VD: Ebook 100 Bài Đọc B2B)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
-                    <input type="text" id="courseBadge" placeholder="Nhãn (VD: Combo Ebook, Coaching 1:1)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="courseTitle" placeholder="Tên khóa học/Ebook" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="courseBadge" placeholder="Nhãn (VD: Combo Ebook)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                     <input type="text" id="coursePrice" placeholder="Giá bán (VD: 299.000đ)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                     <input type="text" id="courseOldPrice" placeholder="Giá gốc gạch đi (VD: 500.000đ)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                 </div>
-                <textarea id="courseDesc" rows="3" placeholder="Mô tả vắn tắt về lộ trình hoặc nội dung tài liệu..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+                <textarea id="courseDesc" rows="3" placeholder="Mô tả vắn tắt..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
 
                 <button onclick="addNewCourse()" class="bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-indigo-500 transition shadow-md">
                     ➕ Thêm Khóa Học Mới
@@ -175,7 +196,7 @@
     <!-- FIREBASE & LOGIC ADMIN SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, query, orderBy, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
@@ -218,25 +239,53 @@
             }
         };
 
-        // TAB 1: Lưu cấu hình Giao diện
+        // TAB 1: Lưu cấu hình Giao diện & Banner
         window.saveThemeSettings = async function() {
             const themeColor = document.getElementById('themeColor').value;
             const showHero = document.getElementById('showHero').checked;
             const showPinyinToggle = document.getElementById('showPinyinToggle').checked;
+            
+            const heroBadge = document.getElementById('heroBadge').value;
+            const heroTitle1 = document.getElementById('heroTitle1').value;
+            const heroTitle2 = document.getElementById('heroTitle2').value;
+            const heroDesc = document.getElementById('heroDesc').value;
 
             try {
                 await setDoc(doc(db, "settings", "global"), {
                     themeColor,
                     showHero,
                     showPinyinToggle,
+                    heroBadge,
+                    heroTitle1,
+                    heroTitle2,
+                    heroDesc,
                     updatedAt: new Date()
-                });
-                alert('Đã cập nhật cấu hình giao diện thành công!');
+                }, { merge: true });
+                alert('Đã cập nhật cấu hình giao diện & bìa thành công!');
             } catch (e) {
                 console.error(e);
-                alert('Không thể lưu giao diện.');
+                alert('Không thể lưu cấu hình.');
             }
         };
+
+        // Tải dữ liệu cũ lên form cài đặt khi vừa đăng nhập Admin
+        async function loadSettingsToForm() {
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "global"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.themeColor) document.getElementById('themeColor').value = data.themeColor;
+                    if(data.showHero !== undefined) document.getElementById('showHero').checked = data.showHero;
+                    if(data.showPinyinToggle !== undefined) document.getElementById('showPinyinToggle').checked = data.showPinyinToggle;
+                    if(data.heroBadge) document.getElementById('heroBadge').value = data.heroBadge;
+                    if(data.heroTitle1) document.getElementById('heroTitle1').value = data.heroTitle1;
+                    if(data.heroTitle2) document.getElementById('heroTitle2').value = data.heroTitle2;
+                    if(data.heroDesc) document.getElementById('heroDesc').value = data.heroDesc;
+                }
+            } catch (e) {
+                console.error("Lỗi tải settings:", e);
+            }
+        }
 
         // TAB 2: Thêm & Xóa Bài Đọc
         window.addNewPost = async function() {
@@ -257,19 +306,15 @@
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postTag').value = '';
                 document.getElementById('postContent').value = '';
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         };
 
         window.deletePost = async function(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa bài đọc này khỏi hệ thống?')) {
+            if (confirm('Bạn có chắc chắn muốn xóa bài đọc này?')) {
                 try {
                     await deleteDoc(doc(db, "posts", id));
                     alert('Đã xóa bài đọc.');
-                } catch (e) {
-                    console.error(e);
-                }
+                } catch (e) { console.error(e); }
             }
         };
 
@@ -298,9 +343,7 @@
                 document.getElementById('coursePrice').value = '';
                 document.getElementById('courseOldPrice').value = '';
                 document.getElementById('courseDesc').value = '';
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         };
 
         window.deleteCourse = async function(id) {
@@ -314,6 +357,8 @@
 
         // Tải toàn bộ dữ liệu Realtime vào Admin
         function loadAllAdminData() {
+            loadSettingsToForm();
+
             // Read Bài đọc
             onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
                 let html = '';
