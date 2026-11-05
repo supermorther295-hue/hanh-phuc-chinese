@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Bài Đọc - 幸福中文</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        /* CSS ẩn pinyin khi bật chế độ ẩn */
+        .hide-pinyin ruby rt {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg my-10 rounded-xl">
+        <!-- Nút quay lại & Công tắc Pinyin -->
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <a href="index.html" class="text-blue-600 font-semibold hover:underline">← Quay lại danh sách</a>
+            <button onclick="togglePinyin()" id="pinyin-btn" class="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 transition">
+                Ẩn Pinyin
+            </button>
+        </div>
+
+        <!-- Tiêu đề bài học -->
+        <h1 id="post-title" class="text-2xl font-bold mb-2">Đang tải tiêu đề...</h1>
+        <span id="post-level" class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold mb-6"></span>
+
+        <!-- Nội dung bài đọc (Hỗ trợ Shadowing từng câu) -->
+        <div id="article-content" class="space-y-4 text-lg leading-relaxed">
+            <!-- Dữ liệu từng câu sẽ được render ở đây -->
+        </div>
+
+        <!-- Mục Ngữ pháp quan trọng -->
+        <div class="mt-10 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+            <h3 class="font-bold text-blue-900 text-lg mb-2">📌 Điểm ngữ pháp quan trọng trong bài</h3>
+            <div id="post-grammar" class="text-gray-700 space-y-2">
+                <!-- Nội dung ngữ pháp -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cấu hình Firebase của bạn
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            // ... các thông số khác của bạn
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Lấy ID bài viết từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        if (postId) {
+            db.collection("posts").doc(postId).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('post-title').innerText = data.title;
+                    document.getElementById('post-level').innerText = data.level || 'HSK';
+                    
+                    // Render nội dung bài đọc kèm nút bấm Shadowing (Nghe)
+                    // Giả sử data.sentences là một mảng gồm các câu: [{chinese: "你好", pinyin: "nǐ hǎo", meaning: "Xin chào"}]
+                    let contentHtml = "";
+                    if(data.sentences && Array.isArray(data.sentences)) {
+                        data.sentences.forEach((item, index) => {
+                            contentHtml += `
+                                <div class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition flex justify-between items-center">
+                                    <div>
+                                        <ruby class="text-xl font-medium text-gray-900">${item.chinese}<rt class="text-xs text-blue-500">${item.pinyin}</rt></ruby>
+                                        <p class="text-sm text-gray-500 mt-1">${item.meaning}</p>
+                                    </div>
+                                    <button onclick="playAudio('${item.chinese}')" class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                        🔊 Nghe câu
+                                    </button>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        contentHtml = `<p>Chưa có nội dung chi tiết cho bài này.</p>`;
+                    }
+                    document.getElementById('article-content').innerHTML = contentHtml;
+
+                    // Render mục ngữ pháp
+                    document.getElementById('post-grammar').innerHTML = data.grammar || "Không có điểm ngữ pháp chuyên sâu trong bài này.";
+                } else {
+                    document.getElementById('article-content').innerHTML = "<p>Không tìm thấy bài viết.</p>";
+                }
+            });
+        }
+
+        // Tính năng Ẩn/Hiện Pinyin
+        let isPinyinHidden = false;
+        function togglePinyin() {
+            isPinyinHidden = !isPinyinHidden;
+            const container = document.getElementById('article-content');
+            const btn = document.getElementById('pinyin-btn');
+            if (isPinyinHidden) {
+                container.classList.add('hide-pinyin');
+                btn.innerText = "Hiện Pinyin";
+                btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
+                btn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+            } else {
+                container.classList.remove('hide-pinyin');
+                btn.innerText = "Ẩn Pinyin";
+                btn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
+            }
+        }
+
+        // Tính năng đọc mẫu (Shadowing sử dụng SpeechSynthesis API mặc định của trình duyệt)
+        function playAudio(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; // Đặt giọng đọc tiếng Trung
+                utterance.rate = 0.9; // Tốc độ đọc chậm vừa phải cho học viên luyện nghe
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ tính năng phát âm thanh tự động.");
+            }
+        }
+    </script>
+</body>
+</html>
