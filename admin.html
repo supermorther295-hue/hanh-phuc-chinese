@@ -107,22 +107,47 @@
             </button>
         </section>
 
-        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC ================= -->
+        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC (HỖ TRỢ TÁCH CÂU & NGỮ PHÁP) ================= -->
         <section id="adminTab-posts" class="admin-tab-content space-y-8">
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-base font-bold text-slate-900">➕ Đăng Bài Đọc Luyện Tập Mới</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Nhập thông tin bài đọc để hiển thị ở Tab "Bài Đọc" của học viên.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Nhập tiêu đề, phân cấp độ, tách từng câu phục vụ Shadowing và bổ sung ngữ pháp cuối bài.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <input type="text" id="postTitle" placeholder="Tiêu đề bài học (VD: Bài 1: 周末你做什么？)" class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
-                    <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 3, HSK 4, B2B)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 3, HSK 4)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                 </div>
-                <textarea id="postContent" rows="4" placeholder="Nội dung chữ Hán..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+
+                <!-- Khu vực nhập từng câu động (Dùng cho Shadowing & Pinyin) -->
+                <div class="space-y-4 border-t border-slate-200 pt-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider">📝 Cấu trúc câu (Dùng cho Shadowing & Pinyin)</h3>
+                        <button type="button" onclick="addSentenceRow()" class="px-3.5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition">+ Thêm câu</button>
+                    </div>
+                    
+                    <div id="sentences-container" class="space-y-3">
+                        <!-- Dòng mẫu số 1 -->
+                        <div class="sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                            <input type="text" placeholder="Tiếng Trung (VD: 你好)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                            <input type="text" placeholder="Pinyin (VD: nǐ hǎo)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
+                                <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mục Ngữ pháp quan trọng ở cuối bài -->
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">📌 Điểm ngữ pháp quan trọng (Hiển thị cuối bài)</label>
+                    <textarea id="postGrammar" rows="3" placeholder="Nhóm ngữ pháp, cấu trúc câu chính hoặc lưu ý trong bài..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50"></textarea>
+                </div>
 
                 <button onclick="addNewPost()" class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-500 transition shadow-md">
-                    🚀 Đăng Bài Đọc Mới
+                    🚀 Xuất Bản Bài Đọc Mới
                 </button>
             </div>
 
@@ -179,17 +204,10 @@
 
     <!-- BẢO MẬT & CHẶN SAO CHÉP / F12 -->
     <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83)) { // C, U, S
-                e.preventDefault();
-            }
-            if (e.keyCode === 123) { // F12
-                e.preventDefault();
-            }
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83)) { e.preventDefault(); }
+            if (e.keyCode === 123) { e.preventDefault(); }
         });
     </script>
 
@@ -239,6 +257,22 @@
             }
         };
 
+        // Thêm dòng nhập câu động
+        window.addSentenceRow = function() {
+            const container = document.getElementById('sentences-container');
+            const row = document.createElement('div');
+            row.className = "sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200";
+            row.innerHTML = `
+                <input type="text" placeholder="Tiếng Trung (VD: 谢谢)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                <input type="text" placeholder="Pinyin (VD: xièxie)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
+                </div>
+            `;
+            container.appendChild(row);
+        };
+
         // TAB 1: Lưu cấu hình Giao diện & Banner
         window.saveThemeSettings = async function() {
             const themeColor = document.getElementById('themeColor').value;
@@ -252,13 +286,7 @@
 
             try {
                 await setDoc(doc(db, "settings", "global"), {
-                    themeColor,
-                    showHero,
-                    showPinyinToggle,
-                    heroBadge,
-                    heroTitle1,
-                    heroTitle2,
-                    heroDesc,
+                    themeColor, showHero, showPinyinToggle, heroBadge, heroTitle1, heroTitle2, heroDesc,
                     updatedAt: new Date()
                 }, { merge: true });
                 alert('Đã cập nhật cấu hình giao diện & bìa thành công!');
@@ -268,7 +296,6 @@
             }
         };
 
-        // Tải dữ liệu cũ lên form cài đặt khi vừa đăng nhập Admin
         async function loadSettingsToForm() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "global"));
@@ -282,31 +309,58 @@
                     if(data.heroTitle2) document.getElementById('heroTitle2').value = data.heroTitle2;
                     if(data.heroDesc) document.getElementById('heroDesc').value = data.heroDesc;
                 }
-            } catch (e) {
-                console.error("Lỗi tải settings:", e);
-            }
+            } catch (e) { console.error("Lỗi tải settings:", e); }
         }
 
-        // TAB 2: Thêm & Xóa Bài Đọc
+        // TAB 2: Thêm & Xóa Bài Đọc (Có hỗ trợ mảng sentences và grammar)
         window.addNewPost = async function() {
             const title = document.getElementById('postTitle').value;
             const tag = document.getElementById('postTag').value;
-            const content = document.getElementById('postContent').value;
+            const grammar = document.getElementById('postGrammar').value;
 
-            if (!title || !content) { alert('Vui lòng nhập đầy đủ tiêu đề và nội dung.'); return; }
+            if (!title) { alert('Vui lòng nhập tiêu đề bài học.'); return; }
+
+            // Gom dữ liệu từ các dòng câu đã nhập
+            const sentenceRows = document.querySelectorAll('.sentence-row');
+            let sentencesArray = [];
+            sentenceRows.forEach(row => {
+                const chinese = row.querySelector('.cn-input').value.trim();
+                const pinyin = row.querySelector('.pinyin-input').value.trim();
+                const meaning = row.querySelector('.meaning-input').value.trim();
+                if(chinese) {
+                    sentencesArray.push({ chinese, pinyin, meaning });
+                }
+            });
+
+            if (sentencesArray.length === 0) {
+                alert('Vui lòng thêm ít nhất một câu tiếng Trung có nội dung.');
+                return;
+            }
 
             try {
                 await addDoc(collection(db, "posts"), {
                     title,
-                    tag: tag || 'HSK',
-                    content,
+                    level: tag || 'HSK 3',
+                    sentences: sentencesArray,
+                    grammar: grammar || '',
                     createdAt: new Date()
                 });
                 alert('Đã xuất bản bài đọc mới thành công!');
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postTag').value = '';
-                document.getElementById('postContent').value = '';
-            } catch (e) { console.error(e); }
+                document.getElementById('postGrammar').value = '';
+                // Reset lại khung câu về 1 dòng mặc định
+                document.getElementById('sentences-container').innerHTML = `
+                    <div class="sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                        <input type="text" placeholder="Tiếng Trung (VD: 你好)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                        <input type="text" placeholder="Pinyin (VD: nǐ hǎo)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
+                            <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
+                        </div>
+                    </div>
+                `;
+            } catch (e) { console.error(e); alert('Lỗi khi đăng bài học.'); }
         };
 
         window.deletePost = async function(id) {
@@ -365,14 +419,15 @@
                 if (!snapshot.empty) {
                     snapshot.forEach(docSnap => {
                         const p = docSnap.data();
+                        const sentencesCount = p.sentences ? p.sentences.length : 0;
                         html += `
                             <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2">
-                                        <span class="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded">${p.tag || 'HSK'}</span>
+                                        <span class="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded">${p.level || 'HSK'}</span>
                                         <h4 class="font-bold text-sm text-slate-900">${p.title}</h4>
                                     </div>
-                                    <p class="text-xs text-slate-500 line-clamp-1">${p.content.replace(/<[^>]*>/g, '')}</p>
+                                    <p class="text-xs text-slate-500">Số câu Shadowing: <span class="font-semibold text-slate-700">${sentencesCount} câu</span></p>
                                 </div>
                                 <button onclick="deletePost('${docSnap.id}')" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition">Xóa</button>
                             </div>
