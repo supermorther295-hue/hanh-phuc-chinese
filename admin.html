@@ -107,37 +107,34 @@
             </button>
         </section>
 
-        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC (HỖ TRỢ TÁCH CÂU & NGỮ PHÁP) ================= -->
+        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC (DÁN NHANH CẢ ĐOẠN VĂN) ================= -->
         <section id="adminTab-posts" class="admin-tab-content space-y-8">
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-base font-bold text-slate-900">➕ Đăng Bài Đọc Luyện Tập Mới</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Nhập tiêu đề, phân cấp độ, tách từng câu phục vụ Shadowing và bổ sung ngữ pháp cuối bài.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Dán nhanh cả bài viết theo thứ tự: Câu tiếng Trung -> Pinyin -> Nghĩa tiếng Việt.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" id="postTitle" placeholder="Tiêu đề bài học (VD: Bài 1: 周末你做什么？)" class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
-                    <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 3, HSK 4)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="postTitle" placeholder="Tiêu đề bài học (VD: 周末你喜欢做什么？)" class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
+                    <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 2, HSK 3)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                 </div>
 
-                <!-- Khu vực nhập từng câu động (Dùng cho Shadowing & Pinyin) -->
-                <div class="space-y-4 border-t border-slate-200 pt-6">
+                <!-- Ô nhập nhanh cả đoạn văn -->
+                <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider">📝 Cấu trúc câu (Dùng cho Shadowing & Pinyin)</h3>
-                        <button type="button" onclick="addSentenceRow()" class="px-3.5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition">+ Thêm câu</button>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">📄 Nội dung bài đọc (Dán nhanh theo bộ 3 dòng):</label>
+                        <span class="text-[11px] text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg">Cấu trúc: 1.Tiếng Trung ➔ 2.Pinyin ➔ 3.Nghĩa</span>
                     </div>
-                    
-                    <div id="sentences-container" class="space-y-3">
-                        <!-- Dòng mẫu số 1 -->
-                        <div class="sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
-                            <input type="text" placeholder="Tiếng Trung (VD: 你好)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                            <input type="text" placeholder="Pinyin (VD: nǐ hǎo)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
-                                <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
-                            </div>
-                        </div>
-                    </div>
+                    <textarea id="bulkSentencesInput" rows="8" placeholder="Ví dụ dán vào đây:
+
+周末你喜欢做什么？
+Zhōumò nǐ xǐhuān zuò shénme?
+Cuối tuần bạn thích làm gì?
+
+旅游还是玩游戏？
+Lǚyóu háishì wán yóuxì?
+Đi du lịch hay chơi game?" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50 font-mono leading-relaxed"></textarea>
                 </div>
 
                 <!-- Mục Ngữ pháp quan trọng ở cuối bài -->
@@ -147,7 +144,7 @@
                 </div>
 
                 <button onclick="addNewPost()" class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-500 transition shadow-md">
-                    🚀 Xuất Bản Bài Đọc Mới
+                    🚀 Phân Tách & Xuất Bản Bài Đọc Mới
                 </button>
             </div>
 
@@ -257,22 +254,6 @@
             }
         };
 
-        // Thêm dòng nhập câu động
-        window.addSentenceRow = function() {
-            const container = document.getElementById('sentences-container');
-            const row = document.createElement('div');
-            row.className = "sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200";
-            row.innerHTML = `
-                <input type="text" placeholder="Tiếng Trung (VD: 谢谢)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                <input type="text" placeholder="Pinyin (VD: xièxie)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                <div class="flex gap-2">
-                    <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
-                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
-                </div>
-            `;
-            container.appendChild(row);
-        };
-
         // TAB 1: Lưu cấu hình Giao diện & Banner
         window.saveThemeSettings = async function() {
             const themeColor = document.getElementById('themeColor').value;
@@ -312,55 +293,51 @@
             } catch (e) { console.error("Lỗi tải settings:", e); }
         }
 
-        // TAB 2: Thêm & Xóa Bài Đọc (Có hỗ trợ mảng sentences và grammar)
+        // TAB 2: Thêm & Xóa Bài Đọc (Phân tách tự động từ ô dán nhanh)
         window.addNewPost = async function() {
-            const title = document.getElementById('postTitle').value;
-            const tag = document.getElementById('postTag').value;
-            const grammar = document.getElementById('postGrammar').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const tag = document.getElementById('postTag').value.trim();
+            const rawText = document.getElementById('bulkSentencesInput').value.trim();
+            const grammar = document.getElementById('postGrammar').value.trim();
 
             if (!title) { alert('Vui lòng nhập tiêu đề bài học.'); return; }
+            if (!rawText) { alert('Vui lòng dán nội dung bài đọc.'); return; }
 
-            // Gom dữ liệu từ các dòng câu đã nhập
-            const sentenceRows = document.querySelectorAll('.sentence-row');
+            // Tự động phân tách văn bản dán vào theo từng nhóm 3 dòng
+            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             let sentencesArray = [];
-            sentenceRows.forEach(row => {
-                const chinese = row.querySelector('.cn-input').value.trim();
-                const pinyin = row.querySelector('.pinyin-input').value.trim();
-                const meaning = row.querySelector('.meaning-input').value.trim();
-                if(chinese) {
+
+            for (let i = 0; i < lines.length; i += 3) {
+                const chinese = lines[i] || '';
+                const pinyin = lines[i + 1] || '';
+                const meaning = lines[i + 2] || '';
+                if (chinese) {
                     sentencesArray.push({ chinese, pinyin, meaning });
                 }
-            });
+            }
 
             if (sentencesArray.length === 0) {
-                alert('Vui lòng thêm ít nhất một câu tiếng Trung có nội dung.');
+                alert('Không thể nhận diện các câu. Hãy kiểm tra lại định dạng dán vào.');
                 return;
             }
 
             try {
                 await addDoc(collection(db, "posts"), {
                     title,
-                    level: tag || 'HSK 3',
+                    level: tag || 'HSK 2',
                     sentences: sentencesArray,
                     grammar: grammar || '',
                     createdAt: new Date()
                 });
-                alert('Đã xuất bản bài đọc mới thành công!');
+                alert(`Đã phân tách thành công ${sentencesArray.length} câu và xuất bản bài đọc!`);
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postTag').value = '';
+                document.getElementById('bulkSentencesInput').value = '';
                 document.getElementById('postGrammar').value = '';
-                // Reset lại khung câu về 1 dòng mặc định
-                document.getElementById('sentences-container').innerHTML = `
-                    <div class="sentence-row grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
-                        <input type="text" placeholder="Tiếng Trung (VD: 你好)" class="cn-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                        <input type="text" placeholder="Pinyin (VD: nǐ hǎo)" class="pinyin-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white" required>
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="Nghĩa tiếng Việt" class="meaning-input p-2.5 rounded-xl border border-slate-200 text-xs bg-white flex-grow" required>
-                            <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-2.5 bg-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-200">×</button>
-                        </div>
-                    </div>
-                `;
-            } catch (e) { console.error(e); alert('Lỗi khi đăng bài học.'); }
+            } catch (e) { 
+                console.error(e); 
+                alert('Có lỗi xảy ra khi lưu dữ liệu lên Firestore.'); 
+            }
         };
 
         window.deletePost = async function(id) {
@@ -427,7 +404,7 @@
                                         <span class="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded">${p.level || 'HSK'}</span>
                                         <h4 class="font-bold text-sm text-slate-900">${p.title}</h4>
                                     </div>
-                                    <p class="text-xs text-slate-500">Số câu Shadowing: <span class="font-semibold text-slate-700">${sentencesCount} câu</span></p>
+                                    <p class="text-xs text-slate-500">Đã phân tách: <span class="font-semibold text-emerald-600">${sentencesCount} câu Shadowing</span></p>
                                 </div>
                                 <button onclick="deletePost('${docSnap.id}')" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition">Xóa</button>
                             </div>
