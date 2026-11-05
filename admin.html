@@ -107,12 +107,12 @@
             </button>
         </section>
 
-        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC (DÁN NHANH CẢ ĐOẠN VĂN) ================= -->
+        <!-- ================= TAB 2: QUẢN LÝ BÀI ĐỌC (HỖ TRỢ DÁN NHANH & TÁCH CÂU) ================= -->
         <section id="adminTab-posts" class="admin-tab-content space-y-8">
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-base font-bold text-slate-900">➕ Đăng Bài Đọc Luyện Tập Mới</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Dán nhanh cả bài viết theo thứ tự: Câu tiếng Trung -> Pinyin -> Nghĩa tiếng Việt.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Dán nhanh nội dung bài đọc theo bộ 3 dòng (Tiếng Trung ➔ Pinyin ➔ Nghĩa) để hỗ trợ bật/tắt Pinyin hoàn hảo.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -120,11 +120,11 @@
                     <input type="text" id="postTag" placeholder="Cấp độ (VD: HSK 2, HSK 3)" class="px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none bg-slate-50">
                 </div>
 
-                <!-- Ô nhập nhanh cả đoạn văn -->
+                <!-- Ô nhập nhanh cả đoạn văn (Bulk Input) -->
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">📄 Nội dung bài đọc (Dán nhanh theo bộ 3 dòng):</label>
-                        <span class="text-[11px] text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg">Cấu trúc: 1.Tiếng Trung ➔ 2.Pinyin ➔ 3.Nghĩa</span>
+                        <span class="text-[11px] text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg">Cấu trúc: 1.Tiếng Trung ➔ 2.Pinyin ➔ 3.Nghĩa tiếng Việt</span>
                     </div>
                     <textarea id="bulkSentencesInput" rows="8" placeholder="Ví dụ dán vào đây:
 
@@ -293,7 +293,7 @@ Lǚyóu háishì wán yóuxì?
             } catch (e) { console.error("Lỗi tải settings:", e); }
         }
 
-        // TAB 2: Thêm & Xóa Bài Đọc (Phân tách tự động từ ô dán nhanh)
+        // TAB 2: Thêm & Xóa Bài Đọc (Phân tách tự động bộ 3 dòng)
         window.addNewPost = async function() {
             const title = document.getElementById('postTitle').value.trim();
             const tag = document.getElementById('postTag').value.trim();
@@ -303,7 +303,7 @@ Lǚyóu háishì wán yóuxì?
             if (!title) { alert('Vui lòng nhập tiêu đề bài học.'); return; }
             if (!rawText) { alert('Vui lòng dán nội dung bài đọc.'); return; }
 
-            // Tự động phân tách văn bản dán vào theo từng nhóm 3 dòng
+            // Tự động phân tách văn bản dán vào thành mảng sentences theo từng nhóm 3 dòng
             const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             let sentencesArray = [];
 
