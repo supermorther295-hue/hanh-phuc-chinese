@@ -9,7 +9,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        /* CSS dùng để ẩn Pinyin và Nghĩa tiếng Việt khi tắt chế độ */
         .hide-extra .pinyin-text,
         .hide-extra .meaning-text {
             display: none !important;
@@ -22,15 +21,15 @@
 </head>
 <body class="bg-gray-50 text-gray-800 relative min-h-screen pb-20">
 
-    <!-- POPUP TRA TỪ KHI BÔI ĐEN -->
+    <!-- POPUP TRA TỪ TỰ ĐỘNG -->
     <div id="wordPopup" class="hidden absolute z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-xl border border-slate-700 text-xs max-w-xs transition-all">
         <div class="flex justify-between items-center mb-1 gap-4">
             <span id="popupWord" class="font-bold text-base text-amber-400"></span>
             <button onclick="closeWordPopup()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
         </div>
         <div id="popupDetails" class="space-y-1 mb-3">
-            <p id="popupPinyin" class="text-blue-400 font-semibold text-xs"></p>
-            <p id="popupMeaning" class="text-slate-200 text-xs"></p>
+            <p id="popupPinyin" class="text-blue-400 font-semibold text-xs">Đang tải Pinyin...</p>
+            <p id="popupMeaning" class="text-slate-200 text-xs">Đang dịch nghĩa tiếng Việt...</p>
         </div>
         <button onclick="saveWordToPersonalDict()" id="saveWordBtn" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition text-xs flex items-center justify-center gap-1 shadow-md">
             ⭐ Lưu vào Sổ từ vựng cá nhân
@@ -38,7 +37,6 @@
     </div>
 
     <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg my-10 rounded-xl">
-        <!-- Nút quay lại & Công tắc Bật/Tắt Pinyin & Nghĩa -->
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <a href="index.html" class="text-blue-600 font-semibold hover:underline">← Quay lại danh sách</a>
             
@@ -48,41 +46,32 @@
             </label>
         </div>
 
-        <!-- Tiêu đề bài học -->
         <h1 id="post-title" class="text-2xl font-bold mb-2">Đang tải tiêu đề...</h1>
         <span id="post-level" class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold mb-6"></span>
 
-        <!-- Hướng dẫn bôi đen -->
         <div class="text-[11px] text-slate-400 bg-slate-50 p-2.5 rounded-lg mb-4 flex items-center gap-1.5 border border-slate-100">
-            💡 <span>Tip: <b>Bôi đen (Highlight)</b> từ tiếng Trung bất kỳ trong bài để xem nghĩa tiếng Việt và lưu nhanh vào Sổ từ vựng cá nhân.</span>
+            💡 <span>Tip: <b>Bôi đen</b> bất kỳ từ/câu tiếng Trung nào để tra cứu nghĩa tự động và lưu vào Sổ từ vựng.</span>
         </div>
 
-        <!-- Nội dung bài đọc -->
         <div id="article-container" class="space-y-4">
-            <div id="article-content" class="space-y-4 text-lg leading-relaxed">
-                <!-- Dữ liệu từng câu sẽ được render ở đây -->
-            </div>
+            <div id="article-content" class="space-y-4 text-lg leading-relaxed"></div>
         </div>
 
-        <!-- Mục Ngữ pháp quan trọng -->
         <div class="mt-10 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
             <h3 class="font-bold text-blue-900 text-lg mb-2">📌 Điểm ngữ pháp quan trọng trong bài</h3>
-            <div id="post-grammar" class="text-gray-700 space-y-2">
-                <!-- Nội dung ngữ pháp -->
-            </div>
+            <div id="post-grammar" class="text-gray-700 space-y-2"></div>
         </div>
 
-        <!-- NÚT ĐÁNH DẤU HOÀN THÀNH BÀI HỌC -->
+        <!-- NÚT ĐÁNH DẤU HOÀN THÀNH -->
         <div class="mt-10 pt-6 border-t border-gray-200 text-center space-y-3">
             <button id="completeBtn" onclick="markAsCompleted()" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2 mx-auto">
                 ✅ Đánh dấu ĐÃ HOÀN THÀNH bài đọc này
             </button>
-            <p id="completionStatus" class="text-xs text-emerald-600 font-semibold hidden">🎉 Bài đọc này đã được lưu vào tiến độ cá nhân của bạn!</p>
+            <p id="completionStatus" class="text-xs text-emerald-600 font-semibold hidden">🎉 Đã ghi nhận vào tiến độ cá nhân của bạn!</p>
         </div>
     </div>
 
     <script>
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBtrlwBm1ouRhinkKiNeOZTSjwr4xCeUUY",
             authDomain: "hanhphuc114-47ee3.firebaseapp.com",
@@ -101,26 +90,8 @@
         const postId = urlParams.get('id');
         let currentLessonTitle = "";
         let selectedWordText = "";
-        let selectedWordMeaning = "";
-
-        // Từ điển mẫu tra cứu nhanh (Bạn có thể bổ sung thêm tùy ý)
-        const miniDict = {
-            "平时": { pinyin: "píngshí", meaning: "thường ngày, bình thường" },
-            "周末": { pinyin: "zhōumò", meaning: "cuối tuần" },
-            "喜欢": { pinyin: "xǐhuan", meaning: "thích, yêu thích" },
-            "做什么": { pinyin: "zuò shénme", meaning: "làm gì" },
-            " Pinyin ": { pinyin: "", meaning: "" },
-            "工作": { pinyin: "gōngzuò", meaning: "công việc, làm việc" },
-            "很": { pinyin: "hěn", meaning: "rất" },
-            "忙": { pinyin: "máng", meaning: "bận rộn" },
-            "所以": { pinyin: "suǒyǐ", meaning: "cho nên, vì vậy" },
-            "对": { pinyin: "duì", meaning: "đối với" },
-            "非常": { pinyin: "fēicháng", meaning: "vô cùng, cực kỳ" },
-            "重要": { pinyin: "zhòngyào", meaning: "quan trọng" },
-            "朋友": { pinyin: "péngyou", meaning: "bạn bè" },
-            "常常": { pinyin: "chángcháng", meaning: "thường xuyên" },
-            " and ": { pinyin: "", meaning: "" }
-        };
+        let translatedMeaning = "";
+        let translatedPinyin = "";
 
         if (postId) {
             db.collection("posts").doc(postId).get().then((doc) => {
@@ -167,15 +138,25 @@
             }
         }
 
+        // ĐÁNH DẤU HOÀN THÀNH (Đồng bộ Realtime với Admin & Trang cá nhân)
         async function markAsCompleted() {
             if (!currentLessonTitle) return;
             try {
+                // Lưu vào collection chung để Admin quản lý và học viên đồng bộ
                 await db.collection("user_progress").add({
                     userName: "Học viên",
                     lesson: currentLessonTitle,
                     lessonId: postId,
                     completedAt: new Date()
                 });
+                
+                // Đồng thời lưu vào localStorage để trang cá nhân của học viên lập tức "nhảy số"
+                let completedLessons = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+                if (!completedLessons.includes(postId)) {
+                    completedLessons.push(postId);
+                    localStorage.setItem('completed_lessons', JSON.stringify(completedLessons));
+                }
+
                 const btn = document.getElementById('completeBtn');
                 btn.className = "px-8 py-3.5 bg-slate-200 text-slate-600 font-bold rounded-2xl cursor-not-allowed text-sm flex items-center justify-center gap-2 mx-auto";
                 btn.innerHTML = "🎉 Đã ghi nhận hoàn thành";
@@ -183,11 +164,12 @@
                 document.getElementById('completionStatus').classList.remove('hidden');
             } catch (e) {
                 console.error(e);
+                alert("Không thể ghi nhận hoàn thành.");
             }
         }
 
-        // BÔI ĐEN TRA TỪ TỰ ĐỘNG
-        document.addEventListener('mouseup', function(e) {
+        // BÔI ĐEN VÀ DỊCH TỰ ĐỘNG QUA API GOOGLE TRANSLATE MIỄN PHÍ
+        document.addEventListener('mouseup', async function(e) {
             const selection = window.getSelection();
             const text = selection.toString().trim();
 
@@ -195,21 +177,26 @@
                 selectedWordText = text;
                 const popup = document.getElementById('wordPopup');
                 document.getElementById('popupWord').innerText = text;
-
-                // Kiểm tra xem từ bôi đen có trong từ điển mini không
-                if (miniDict[text]) {
-                    selectedWordMeaning = miniDict[text].meaning;
-                    document.getElementById('popupPinyin').innerText = `Pinyin: ${miniDict[text].pinyin}`;
-                    document.getElementById('popupMeaning').innerText = `Nghĩa: ${miniDict[text].meaning}`;
-                } else {
-                    selectedWordMeaning = "Từ vựng tra cứu nhanh";
-                    document.getElementById('popupPinyin').innerText = "";
-                    document.getElementById('popupMeaning').innerText = `Nghĩa: [Đã chọn] ${text}`;
-                }
+                document.getElementById('popupPinyin').innerText = "Đang tra Pinyin...";
+                document.getElementById('popupMeaning').innerText = "Đang dịch nghĩa tiếng Việt...";
 
                 popup.style.top = `${e.pageY + 10}px`;
                 popup.style.left = `${Math.min(e.pageX - 50, window.innerWidth - 220)}px`;
                 popup.classList.remove('hidden');
+
+                try {
+                    // Gọi API dịch công khai miễn phí để lấy nghĩa tiếng Việt
+                    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=vi&dt=t&q=${encodeURIComponent(text)}`);
+                    const resJson = await res.json();
+                    translatedMeaning = resJson[0].map(item => item[0]).join('');
+                    document.getElementById('popupMeaning').innerText = `Nghĩa: ${translatedMeaning}`;
+                    document.getElementById('popupPinyin').innerText = `Từ vựng tiếng Trung`;
+                    translatedPinyin = text;
+                } catch (err) {
+                    translatedMeaning = text;
+                    document.getElementById('popupMeaning').innerText = `Nghĩa: ${text}`;
+                    document.getElementById('popupPinyin').innerText = "";
+                }
             }
         });
 
@@ -225,7 +212,7 @@
             try {
                 await db.collection("user_vocabulary").add({
                     word: selectedWordText,
-                    meaning: selectedWordMeaning,
+                    meaning: translatedMeaning,
                     lessonTitle: currentLessonTitle,
                     savedAt: new Date()
                 });
